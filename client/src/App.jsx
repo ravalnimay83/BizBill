@@ -1,0 +1,25 @@
+import Menubar from "./components/menubar/Menubar.jsx";
+import Dashboard from "./pages/Dashboard/Dashboard.jsx";
+import ManageCategory from "./pages/ManageCategory/ManageCategory.jsx";
+import { Navigate, Route, Routes } from "react-router-dom";
+import ManageUsers from "./pages/ManageUsers/ManageUsers.jsx";
+import ManageItems from "./pages/ManageItems/ManageItems.jsx";
+import Explore from "./pages/Explore/Explore.jsx";
+
+const App = () => {
+    return (
+        <div>
+            <Menubar/>
+            <Routes>
+                <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                <Route path="/dashboard" element={<Dashboard/>} />
+                <Route path="/category" element={<ManageCategory/>} />
+                <Route path="/users" element={<ManageUsers/>} />
+                <Route path="/items" element={<ManageItems/>} />
+                <Route path="/explore" element={<Explore/>} />
+            </Routes>
+        </div>
+
+    );
+}
+export default App;
