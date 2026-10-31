@@ -1,0 +1,293 @@
+/* Main Container */
+.category-list-container {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    min-width: 0;
+
+    padding: 5px;
+    box-sizing: border-box;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    color: #ffffff;
+}
+
+/* Scrollbar */
+.category-list-container::-webkit-scrollbar {
+    width: 5px;
+}
+
+.category-list-container::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+}
+
+/* Heading */
+.category-list-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.category-list-heading h4 {
+    margin: 0;
+
+    color: #ffffff;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.category-list-heading span {
+    padding: 6px 13px;
+
+    color: #93c5fd;
+    background: rgba(59, 130, 246, 0.15);
+
+    border: 1px solid rgba(96, 165, 250, 0.25);
+    border-radius: 20px;
+
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+/* Category Grid */
+.category-cards {
+    display: grid;
+
+    grid-template-columns: repeat(auto-fit, minmax(min(230px, 100%), 1fr));
+
+    gap: 16px;
+
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+/* Category Card */
+.category-card {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+
+    padding: 12px;
+
+    /* The card background is supplied by CategoryList.jsx from category.bgColor. */
+    background: #26374d;
+
+    border: 1px solid rgba(255, 255, 255, 0.13);
+    border-radius: 15px;
+
+    overflow: hidden;
+
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+
+    transition: all 0.25s ease;
+}
+
+/* Hover */
+.category-card:hover {
+    transform: translateY(-4px);
+
+    border-color: rgba(96, 165, 250, 0.5);
+
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* Image Frame */
+.category-image-frame {
+    width: 100%;
+    height: 175px;
+
+    flex: none;
+
+    overflow: hidden;
+
+    background: #0f172a;
+    border-radius: 11px;
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* Image */
+.category-img {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+    object-position: center;
+
+    transition: transform 0.35s ease;
+}
+
+.category-card:hover .category-img {
+    transform: scale(1.05);
+}
+
+/* Card Content */
+.category-card-content {
+    width: 100%;
+    min-width: 0;
+
+    padding: 14px 2px 3px;
+
+    box-sizing: border-box;
+}
+
+/* Content Alignment */
+.category-card-content .d-flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 100%;
+    min-width: 0;
+    gap: 10px;
+}
+
+/* Text Container */
+.category-card-content .flex-grow-1 {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Category Name */
+.category-card-content h5 {
+    margin: 0 0 7px !important;
+
+    color: #ffffff !important;
+
+    font-size: 1rem;
+    font-weight: 700;
+
+    line-height: 1.4;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Item Count */
+.category-card-content p {
+    margin: 0 !important;
+
+    color: #cbd5e1 !important;
+
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+/* Delete Button */
+.category-card-content .btn-danger {
+    flex: 0 0 36px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 36px;
+    height: 36px;
+    padding: 0;
+
+    color: #ffffff;
+    background: #dc2626;
+
+    border: none;
+    border-radius: 9px;
+
+    transition: all 0.2s ease;
+}
+
+.category-card-content .btn-danger:hover {
+    background: #b91c1c;
+    transform: scale(1.07);
+}
+
+.category-card-content .btn-danger i {
+    font-size: 0.95rem;
+}
+
+/* Delete Button */
+.category-delete-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    min-width: 86px;
+    height: 38px;
+    padding: 0 11px;
+    gap: 7px;
+
+    color: #ffffff;
+    background: #dc3545;
+
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    box-shadow: 0 3px 8px rgba(220, 53, 69, 0.2);
+
+    transition: all 0.25s ease;
+}
+
+/* Trash Icon */
+.category-delete-btn i {
+    display: inline-block;
+    color: #ffffff;
+    font-size: 16px;
+    line-height: 1;
+}
+
+.category-delete-btn span {
+    color: #ffffff;
+    font-size: 0.78rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+/* Hover */
+.category-delete-btn:hover {
+    color: #ffffff;
+    background: #b91c1c;
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 5px 12px rgba(220, 53, 69, 0.35);
+}
+
+
+
+/* Responsive */
+@media (max-width: 768px) {
+    .category-cards {
+        grid-template-columns: repeat(auto-fit, minmax(min(230px, 100%), 1fr));
+    }
+
+    .category-image-frame {
+        height: 165px;
+    }
+}
+
+@media (max-width: 480px) {
+    .category-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .category-image-frame {
+        height: 190px;
+    }
+}

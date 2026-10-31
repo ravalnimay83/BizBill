@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { AppContext } from "../../context/AppContextDefinition.js";
 import { addCategory } from "../../Service/CategoryService.js";
-
+import './CategoryForm.css';
 const CategoryForm = () => {
     const { setCategories } = useContext(AppContext);
     const [name, setName] = useState("");
@@ -36,6 +36,10 @@ const CategoryForm = () => {
             console.error(submitError);
         }
     };
+
+    const [loading, setLoading] = useState(false);
+    const [image, setImage] = useState(false);
+    const [data, setData] = useState({});
 
     return (
         <div className="mx-2 mt-2">

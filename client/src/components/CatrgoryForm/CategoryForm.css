@@ -1,0 +1,19 @@
+/* Bottom Spacing - Prevent Save Button Touching Panel Border */
+.left-column .mx-2.mt-2 {
+    margin-bottom: 20px !important;
+}
+
+.left-column .card-body {
+    padding-bottom: 25px;
+}
+
+.left-column form {
+    padding-bottom: 15px;
+}
+
+/* Ensure Proper Scrolling */
+.left-column {
+    padding-bottom: 25px;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
