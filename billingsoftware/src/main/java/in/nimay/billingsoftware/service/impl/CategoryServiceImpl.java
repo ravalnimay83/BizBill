@@ -7,7 +7,6 @@ import in.nimay.billingsoftware.repository.CategoryRepository;
 import in.nimay.billingsoftware.service.CategoryService;
 import in.nimay.billingsoftware.service.FileUploadService;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.annotations.SecondaryRow;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,7 +35,7 @@ public class CategoryServiceImpl implements CategoryService {
     public List<CategoryResponse> read() {
         return categoryRepository.findAll()
                 .stream()
-                .map(categoryEntity -> convertToResponse(categoryEntity))
+                .map(this::convertToResponse)
                 .collect(Collectors.toList());
     }
 
@@ -46,17 +45,17 @@ public class CategoryServiceImpl implements CategoryService {
                 .orElseThrow(() -> new RuntimeException("Category not found: " + categoryId));
         fileUploadService.deleteFile(existingCategory.getImgUrl());
         categoryRepository.delete(existingCategory);
-        return;
     }
-
 
     private CategoryResponse convertToResponse(CategoryEntity newCategory) {
         return CategoryResponse.builder()
                 .categoryId(newCategory.getCategoryId())
                 .name(newCategory.getName())
+                .categoryName(newCategory.getName())
                 .description(newCategory.getDescription())
                 .bgColor(newCategory.getBgColor())
                 .imageUrl(newCategory.getImgUrl())
+                .items(0)
                 .createdAt(newCategory.getCreatedAt())
                 .updatedAt(newCategory.getUpdatedAt())
                 .build();

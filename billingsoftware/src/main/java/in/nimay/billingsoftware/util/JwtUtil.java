@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
 import java.util.function.Function;
@@ -48,6 +49,11 @@ public class JwtUtil {
         return extractClaim(token, Claims::getExpiration);
     }
 
+    public boolean validateToken(String token, UserDetails userDetails) {
+        final String username = extractUsername(token);
+        return username.equals(userDetails.getUsername()) && !extractExpiration(token).before(new Date());
+    }
+
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         return claimsResolver.apply(extractAllClaims(token));
     }
@@ -63,8 +69,12 @@ public class JwtUtil {
     private SecretKey getSigningKey() {
         try {
             return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
-        } catch (IllegalArgumentException exception) {
-            return Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
+        } catch (Exception exception) {
+            byte[] keyBytes = secretKey.getBytes(StandardCharsets.UTF_8);
+            if (keyBytes.length < 32) {
+                keyBytes = Arrays.copyOf(keyBytes, 32);
+            }
+            return Keys.hmacShaKeyFor(keyBytes);
         }
     }
 

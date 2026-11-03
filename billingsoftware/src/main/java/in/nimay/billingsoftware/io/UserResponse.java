@@ -14,9 +14,9 @@ import java.sql.Timestamp;
 @Builder
 public class UserResponse {
 
+    private String name;
     private String userId;
     private String email;
-    private String password;
     private String role;
     private Timestamp createdAt;
     private Timestamp updatedAt;
