@@ -9,9 +9,12 @@ import in.nimay.billingsoftware.repository.ItemRepository;
 import in.nimay.billingsoftware.service.FileUploadService;
 import in.nimay.billingsoftware.service.ItemService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,25 +28,32 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemResponse add(ItemRequest request, MultipartFile file) {
-        String imgUrl = fileUploadService.uploadFile(file);
+        String imgUrl = null;
+        if (file != null && !file.isEmpty()) {
+            try {
+                imgUrl = fileUploadService.uploadFile(file);
+            } catch (IOException e) {
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to upload image: " + e.getMessage(), e);
+            }
+        }
         ItemEntity newItem = convertToEntity(request);
-        CategoryEntity existingCategory = categoryRepository.findById(request.getCategoryId())
-                .orElse(()=> new RuntimeException("Catregory not found"+request.getCategoryId()));
+        CategoryEntity existingCategory = categoryRepository.findByCategoryId(request.getCategoryId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found: " + request.getCategoryId()));
         newItem.setCategory(existingCategory);
         newItem.setImgUrl(imgUrl);
-        newItem =  itemRepository.save(newItem);
-        convertToResponse(newItem);
+        newItem = itemRepository.save(newItem);
+        return convertToResponse(newItem);
     }
 
-    private void convertToResponse(ItemEntity newItem) {
+    private ItemResponse convertToResponse(ItemEntity newItem) {
         return ItemResponse.builder()
                 .itemId(newItem.getItemId())
                 .name(newItem.getName())
                 .description(newItem.getDescription())
                 .price(newItem.getPrice())
                 .imageUrl(newItem.getImgUrl())
-                .categoryName(newItem.getCategory().getName())
-                .categoryId(newItem.getCategory().getCategoryId())
+                .categoryName(newItem.getCategory() != null ? newItem.getCategory().getName() : null)
+                .categoryId(newItem.getCategory() != null ? newItem.getCategory().getCategoryId() : null)
                 .createdAt(newItem.getCreatedAt())
                 .updatedAt(newItem.getUpdatedAt())
                 .build();
@@ -60,11 +70,19 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemResponse> fetchItem() {
-        return List.of();
+        return itemRepository.findAll()
+                .stream()
+                .map(this::convertToResponse)
+                .toList();
     }
 
     @Override
     public void deleteItem(String itemId) {
-
+        ItemEntity existingItem = itemRepository.findByItemId(itemId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found: " + itemId));
+        if (existingItem.getImgUrl() != null && !existingItem.getImgUrl().isBlank()) {
+            fileUploadService.deleteFile(existingItem.getImgUrl());
+        }
+        itemRepository.delete(existingItem);
     }
 }

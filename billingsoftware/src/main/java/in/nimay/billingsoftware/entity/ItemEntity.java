@@ -11,7 +11,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
-import java.security.Timestamp;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name="tbl_items")
