@@ -35,7 +35,12 @@ public class ItemServiceImpl implements ItemService {
             } catch (IOException e) {
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to upload image: " + e.getMessage(), e);
             }
+        } else if (request.getImageUrl() != null && !request.getImageUrl().isBlank()) {
+            imgUrl = request.getImageUrl();
+        } else if (request.getImgUrl() != null && !request.getImgUrl().isBlank()) {
+            imgUrl = request.getImgUrl();
         }
+
         ItemEntity newItem = convertToEntity(request);
         CategoryEntity existingCategory = categoryRepository.findByCategoryId(request.getCategoryId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found: " + request.getCategoryId()));
@@ -43,6 +48,46 @@ public class ItemServiceImpl implements ItemService {
         newItem.setImgUrl(imgUrl);
         newItem = itemRepository.save(newItem);
         return convertToResponse(newItem);
+    }
+
+    @Override
+    public ItemResponse updateItem(String itemId, ItemRequest request, MultipartFile file) {
+        ItemEntity existingItem = itemRepository.findByItemId(itemId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found: " + itemId));
+
+        if (request.getName() != null && !request.getName().isBlank()) {
+            existingItem.setName(request.getName());
+        }
+        if (request.getDescription() != null) {
+            existingItem.setDescription(request.getDescription());
+        }
+        if (request.getPrice() != null) {
+            existingItem.setPrice(request.getPrice());
+        }
+        if (request.getCategoryId() != null && !request.getCategoryId().isBlank()) {
+            CategoryEntity category = categoryRepository.findByCategoryId(request.getCategoryId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found: " + request.getCategoryId()));
+            existingItem.setCategory(category);
+        }
+
+        if (file != null && !file.isEmpty()) {
+            try {
+                if (existingItem.getImgUrl() != null && !existingItem.getImgUrl().isBlank()) {
+                    fileUploadService.deleteFile(existingItem.getImgUrl());
+                }
+                String imgUrl = fileUploadService.uploadFile(file);
+                existingItem.setImgUrl(imgUrl);
+            } catch (IOException e) {
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to upload image: " + e.getMessage(), e);
+            }
+        } else if (request.getImageUrl() != null && !request.getImageUrl().isBlank()) {
+            existingItem.setImgUrl(request.getImageUrl());
+        } else if (request.getImgUrl() != null && !request.getImgUrl().isBlank()) {
+            existingItem.setImgUrl(request.getImgUrl());
+        }
+
+        existingItem = itemRepository.save(existingItem);
+        return convertToResponse(existingItem);
     }
 
     private ItemResponse convertToResponse(ItemEntity newItem) {

@@ -4,6 +4,7 @@ import in.nimay.billingsoftware.entity.CategoryEntity;
 import in.nimay.billingsoftware.io.CategoryRequest;
 import in.nimay.billingsoftware.io.CategoryResponse;
 import in.nimay.billingsoftware.repository.CategoryRepository;
+import in.nimay.billingsoftware.repository.ItemRepository;
 import in.nimay.billingsoftware.service.CategoryService;
 import in.nimay.billingsoftware.service.FileUploadService;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final FileUploadService fileUploadService;
-
+    private final ItemRepository itemRepository;
     @Override
     public CategoryResponse add(CategoryRequest request, MultipartFile file) throws IOException {
         String imgUrl = fileUploadService.uploadFile(file);
@@ -48,6 +49,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     private CategoryResponse convertToResponse(CategoryEntity newCategory) {
+        Integer itemsCount = itemRepository.countByCategory_Id(newCategory.getId());
         return CategoryResponse.builder()
                 .categoryId(newCategory.getCategoryId())
                 .name(newCategory.getName())
@@ -55,7 +57,7 @@ public class CategoryServiceImpl implements CategoryService {
                 .description(newCategory.getDescription())
                 .bgColor(newCategory.getBgColor())
                 .imageUrl(newCategory.getImgUrl())
-                .items(0)
+                .items(itemsCount)
                 .createdAt(newCategory.getCreatedAt())
                 .updatedAt(newCategory.getUpdatedAt())
                 .build();

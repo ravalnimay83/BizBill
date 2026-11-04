@@ -18,10 +18,10 @@ import java.util.List;
 @RequestMapping({"/categories", "/admin/categories"})
 @RequiredArgsConstructor
 @CrossOrigin("*")
-public class ControllerCategory {
+public class CategoryController {
     private final CategoryService categoryService;
 
-    @PostMapping
+    @PostMapping("/admin/catrgories")
     @ResponseStatus(HttpStatus.CREATED)
     public CategoryResponse addCategory(@RequestPart("category") String categoryString,
                                         @RequestPart("file") MultipartFile file)
@@ -46,7 +46,7 @@ public class ControllerCategory {
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping("/{categoryId}")
+    @DeleteMapping("/admin/categories/{categoryId}")
     public void remove(@PathVariable String categoryId){
         try{
             categoryService.delete(categoryId);
