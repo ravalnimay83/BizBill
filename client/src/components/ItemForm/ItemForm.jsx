@@ -1,11 +1,31 @@
+import {useState} from "react";
+
 const ItemForm = () => {
+
+    const [image, setImage] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [data, setData] = useState({
+        name: "",
+        category: "",
+        price: "",
+        description: ""
+    });
+
+    const onChangeHandler = (e) => {
+
+    }
+    const onSubmitHandler = (e) => {
+        e.preventDefault();
+    }
+
+
     return (
         <div className="item-form-container" style={{height: '100vh', overflowY: 'auto', overflowX: 'auto'}}>
             <div className="mx-2 mt-2">
                 <div className="row">
                     <div className="card.col-md-8.from-container">
                         <div className="card-body">
-                            <form>
+                            <form onSubmit={onSubmitHandler}>
                                 <div className="mb-3">
                                     <label htmlFor="image" className="form-label">
                                         <img src="https://placehold.co/48x48" alt="" width={48}></img>
@@ -20,7 +40,9 @@ const ItemForm = () => {
                                            id="name"
                                            name="name"
                                            className="form-control"
-                                           placeholder="Item Name"/>
+                                           placeholder="Item Name"
+                                           onChange={onChangeHandler}
+                                           value={data.name}/>
                                 </div>
                                 <div className="mb-3">
                                     <label htmlFor="category" className="form-label">
